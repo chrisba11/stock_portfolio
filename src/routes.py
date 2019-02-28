@@ -10,7 +10,7 @@ import requests
 @app.route('/')
 def home():
     """
-
+    GET route for / that renders home.html.
     """
     return render_template('home.html')
 
@@ -18,7 +18,7 @@ def home():
 @app.route('/search')
 def company_search_form():
     """
-
+    GET route for /search that renders search.html.
     """
     return render_template('search.html')
 
@@ -26,7 +26,7 @@ def company_search_form():
 @app.route('/search', methods=['POST'])
 def company_search_results():
     """
-
+    POST route for /search that requests company details from API.
     """
     zipcode = request.form.get('zipcode')
 
@@ -52,6 +52,6 @@ def company_search_results():
 @app.route('/company')
 def company_detail():
     """
-
+    GET route for /company that renders company.html.
     """
     return render_template('company.html')
