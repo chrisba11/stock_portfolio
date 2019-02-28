@@ -8,14 +8,13 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 
-class City(db.Model):
-    __tablename__ = 'cities'
+class Company(db.Model):
+    __tablename__ = 'companies'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(256), index=True)
-    zipcode = db.Column(db.String(15), index=True, unique=True)
+    name = db.Column(db.String(256), index=True, unique=True)
 
     date_created = db.Column(db.DateTime, default=dt.now())
 
     def __repr__(self):
-        return '<City {}-{}>'.format(self.name, self.zipcode)
+        return '<Company {}-{}>'.format(self.name, self.zipcode)

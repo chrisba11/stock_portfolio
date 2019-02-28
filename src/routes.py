@@ -1,6 +1,6 @@
 from flask import render_template, abort, redirect, url_for, request
 from sqlalchemy.exc import DBAPIError, IntegrityError
-from .models import db, City
+from .models import db, Company
 from . import app
 import json
 import os
@@ -40,7 +40,7 @@ def company_search_results():
     data = json.loads(res.text)
 
     try:
-        city = City(name=data['name'], zipcode=zipcode)
+        city = Company(name=data['name'], zipcode=zipcode)
         db.session.add(city)
         db.session.commit()
     except (DBAPIError, IntegrityError):
