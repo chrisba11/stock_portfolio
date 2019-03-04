@@ -28,19 +28,15 @@ def company_search_results():
     """
     POST route for /search that requests company details from API.
     """
-    zipcode = request.form.get('zipcode')
+    symbol = request.form.get('symbol')
 
-    url = '{}/company?zip={}&APPID={}'.format(
-        os.environ.get('API_URL'),
-        zipcode,
-        os.environ.get('API_KEY')
-    )
+    url = '{}/stock/{}/company'.format(os.environ.get('API_URL'), symbol)
 
-    res = request.get(url)
+    res = requests.get(url)
     data = json.loads(res.text)
 
     try:
-        city = Company(name=data['name'], zipcode=zipcode)
+        city = Company(name=data['companyName'])
         db.session.add(city)
         db.session.commit()
     except (DBAPIError, IntegrityError):
@@ -49,9 +45,9 @@ def company_search_results():
     return redirect(url_for('.company_detail'))
 
 
-@app.route('/company')
+@app.route('/portfolio')
 def company_detail():
     """
-    GET route for /company that renders company.html.
+    GET route for /portfolio that renders portfolio.html.
     """
-    return render_template('company.html')
+    return render_template('portfolio.html')
