@@ -7,7 +7,7 @@ app = Flask(
     __name__,
     static_url_path='',
     static_folder='static',
-    instance_relative_config=True`
+    instance_relative_config=True
 )
 
 app.config.from_mapping(
