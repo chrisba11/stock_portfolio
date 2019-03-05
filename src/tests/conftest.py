@@ -1,5 +1,5 @@
-from src.models import db as _db
-from src import app as _app
+from ..models import db as _db
+from .. import app as _app
 import pytest
 import os
 
