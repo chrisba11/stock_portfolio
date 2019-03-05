@@ -1,5 +1,6 @@
 from flask import render_template, abort, redirect, url_for, request
 from sqlalchemy.exc import DBAPIError, IntegrityError
+from .forms import Company_form, Company_add_form
 from .models import db, Company
 from . import app
 import json
@@ -24,7 +25,7 @@ def company_search_form():
 
 
 @app.route('/search', methods=['POST'])
-def company_search_results():
+def company_search():
     """
     POST route for /search that requests company details from API.
     """
