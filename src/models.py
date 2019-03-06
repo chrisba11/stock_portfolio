@@ -11,7 +11,8 @@ class Company(db.Model):
     __tablename__ = 'companies'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(256), index=True, unique=True)
+    company_name = db.Column(db.String(256), index=True, unique=True)
+    symbol = db.Column(db.String(12), index=True, unique=True)
 
     def __repr__(self):
-        return '<Company {}-{}>'.format(self.name, self.id)
+        return '<Company {}-{}>'.format(self.company_name, self.id)

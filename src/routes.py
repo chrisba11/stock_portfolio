@@ -1,5 +1,6 @@
-from flask import render_template, abort, redirect, url_for, request
+from flask import render_template, redirect, url_for, request, session, flash
 from sqlalchemy.exc import DBAPIError, IntegrityError
+from .forms import Company_form, Company_add_form
 from .models import db, Company
 from . import app
 import json
@@ -15,34 +16,58 @@ def home():
     return render_template('home.html')
 
 
-@app.route('/search')
-def company_search_form():
+@app.route('/search', methods=['GET', 'POST'])
+def company_search():
     """
-    GET route for /search that renders search.html.
+    GET & POST routes for /search that requests company details from API.
     """
-    return render_template('search.html')
+    form = Company_form()
+
+    if form.validate_on_submit():
+        symbol = form.data['symbol']
+
+        url = '{}/stock/{}/company'.format(os.getenv('API_URL'), symbol)
+
+        res = requests.get(url)
+        data = json.loads(res.text)
+
+        session['context'] = data
+        session['symbol'] = symbol
+
+        return redirect(url_for('.company_preview'))
+
+    return render_template('search.html', form=form)
 
 
-@app.route('/search', methods=['POST'])
-def company_search_results():
+@app.route('/preview', methods=['GET', 'POST'])
+def company_preview():
     """
-    POST route for /search that requests company details from API.
+
     """
-    symbol = request.form.get('symbol')
+    form_context = {
+        'company_name': session['context']['companyName'],
+        'symbol': session['symbol']
+    }
 
-    url = '{}/stock/{}/company'.format(os.environ.get('API_URL'), symbol)
+    form = Company_add_form(**form_context)
 
-    res = requests.get(url)
-    data = json.loads(res.text)
+    if form.validate_on_submit():
+        try:
+            company = Company(company_name=form_context['company_name'], symbol=form_context['symbol'])
+            db.session.add(company)
+            db.session.commit()
+        except (DBAPIError, IntegrityError):
+            flash('Oops. Something went wrong with your search.')
+            return render_template('search.html', form=form)
 
-    try:
-        city = Company(name=data['companyName'])
-        db.session.add(city)
-        db.session.commit()
-    except (DBAPIError, IntegrityError):
-        abort(400)
+        return redirect(url_for('.company_detail'))
 
-    return redirect(url_for('.company_detail'))
+    return render_template(
+        'company.html',
+        form=form,
+        company_name=form_context['company_name'],
+        symbol=form_context['symbol']
+    )
 
 
 @app.route('/portfolio')
@@ -50,4 +75,5 @@ def company_detail():
     """
     GET route for /portfolio that renders portfolio.html.
     """
-    return render_template('portfolio.html')
+    companies = Company.query.all()
+    return render_template('portfolio.html', companies=companies)
