@@ -5,6 +5,6 @@
   <form method="POST" action="{{ url_for(".company_search") }}">
     {{ form.hidden_tag() }}
     {{ form.symbol.label }}{{ form.symbol(size=20) }}
-    <input type="submit" value="Searcg">
+    <input type="submit" value="Search">
   </form>
 {% endblock content %}

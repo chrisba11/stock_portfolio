@@ -1,4 +1,4 @@
-from flask import render_template, abort, redirect, url_for, request
+from flask import render_template, redirect, url_for, request, session, flash
 from sqlalchemy.exc import DBAPIError, IntegrityError
 from .forms import Company_form, Company_add_form
 from .models import db, Company
@@ -16,34 +16,58 @@ def home():
     return render_template('home.html')
 
 
-@app.route('/search')
-def company_search_form():
-    """
-    GET route for /search that renders search.html.
-    """
-    return render_template('search.html')
-
-
-@app.route('/search', methods=['POST'])
+@app.route('/search', methods=['GET', 'POST'])
 def company_search():
     """
-    POST route for /search that requests company details from API.
+    GET & POST routes for /search that requests company details from API.
     """
-    symbol = request.form.get('symbol')
+    form = Company_form()
 
-    url = '{}/stock/{}/company'.format(os.environ.get('API_URL'), symbol)
+    if form.validate_on_submit():
+        symbol = form.data['symbol']
 
-    res = requests.get(url)
-    data = json.loads(res.text)
+        url = '{}/stock/{}/company'.format(os.getenv('API_URL'), symbol)
 
-    try:
-        city = Company(name=data['companyName'])
-        db.session.add(city)
-        db.session.commit()
-    except (DBAPIError, IntegrityError):
-        abort(400)
+        res = requests.get(url)
+        data = json.loads(res.text)
 
-    return redirect(url_for('.company_detail'))
+        session['context'] = data
+        session['symbol'] = symbol
+
+        return redirect(url_for('.company_preview'))
+
+    return render_template('search.html', form=form)
+
+
+@app.route('/preview', methods=['GET', 'POST'])
+def company_preview():
+    """
+
+    """
+    form_context = {
+        'company_name': session['context']['companyName'],
+        'symbol': session['symbol']
+    }
+
+    form = Company_add_form(**form_context)
+
+    if form.validate_on_submit():
+        try:
+            company = Company(company_name=form_context['company_name'], symbol=form_context['symbol'])
+            db.session.add(company)
+            db.session.commit()
+        except (DBAPIError, IntegrityError):
+            flash('Oops. Something went wrong with your search.')
+            return render_template('search.html', form=form)
+
+        return redirect(url_for('.company_detail'))
+
+    return render_template(
+        'company.html',
+        form=form,
+        company_name=form_context['company_name'],
+        symbol=form_context['symbol']
+    )
 
 
 @app.route('/portfolio')
