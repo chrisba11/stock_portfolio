@@ -75,4 +75,5 @@ def company_detail():
     """
     GET route for /portfolio that renders portfolio.html.
     """
-    return render_template('portfolio.html')
+    companies = Company.query.all()
+    return render_template('portfolio.html', companies=companies)

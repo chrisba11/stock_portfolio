@@ -1,5 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>Saved Companies</h2>
+  <div class="container">
+    <h2>Saved Companies</h2>
+    {% for company in companies %}
+      <div class="company">
+        <p>Company: {{ company.company_name }}</p>
+        <p>Symbol: {{ company.symbol }}</p>
+      </div>
+    {% endfor %}
+  </div>
 {% endblock content %}
