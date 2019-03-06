@@ -16,3 +16,10 @@ class Company_add_form(FlaskForm):
     """
     symbol = StringField('symbol', validators=[DataRequired()])
     company_name = StringField('company name', validators=[DataRequired()])
+
+
+class Portfolio_add_form(FlaskForm):
+    """
+
+    """
+    portfolio_name = StringField('portfolio_name', validators=[DataRequired()])

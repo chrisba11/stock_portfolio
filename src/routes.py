@@ -1,11 +1,19 @@
 from flask import render_template, redirect, url_for, request, session, flash
 from sqlalchemy.exc import DBAPIError, IntegrityError
-from .forms import Company_form, Company_add_form
-from .models import db, Company
+from .forms import Company_form, Company_add_form, Portfolio_add_form
+from .models import db, Company, Portfolio
 from . import app
 import json
 import os
 import requests
+
+
+@app.add_template_global
+def get_portfolios():
+    """
+
+    """
+    return Portfolio.query.all()
 
 
 @app.route('/')
@@ -53,7 +61,10 @@ def company_preview():
 
     if form.validate_on_submit():
         try:
-            company = Company(company_name=form_context['company_name'], symbol=form_context['symbol'])
+            company = Company(
+                company_name=form_context['company_name'],
+                symbol=form_context['symbol']
+            )
             db.session.add(company)
             db.session.commit()
         except (DBAPIError, IntegrityError):
@@ -75,5 +86,17 @@ def company_detail():
     """
     GET route for /portfolio that renders portfolio.html.
     """
+    form = Portfolio_add_form()
+
+    if form.validate_on_submit():
+        try:
+            porfolio = Portfolio(portfolio_name=form.data['portfolio_name'])
+            db.session.add(porfolio)
+            db.session.commit()
+        except (DBAPIError, IntegrityError):
+            flash('Oops. Something went wrong with your portfolio form.')
+            return render_template('portfolio.html', form=form)
+        return redirect(url_for('.company_search'))
+
     companies = Company.query.all()
-    return render_template('portfolio.html', companies=companies)
+    return render_template('portfolio.html', companies=companies, form=form)
