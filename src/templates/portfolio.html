@@ -11,11 +11,15 @@
         <input type="submit" name="create_portfolio" id="create_portfolio" value="Create">
       </form>
     </div>
-    {% for company in companies %}
-      <div class="company">
-        <h5>{{ Company.portfolio.portfolio_name }}</h5>
-        <p>Company: {{ company.company_name }} ({{ company.symbol.upper() }})</p>
-      </div>
+    {% for portfolio in portfolios %}
+      <h5>{{ portfolio.portfolio_name }}</h5>
+      {% for company in companies %}
+        {% if company.portfolio.portfolio_name == portfolio.portfolio_name %}
+          <div class="company">
+            <p>{{ company.company_name }} ({{ company.symbol.upper() }})</p>
+          </div>
+        {% endif %}
+      {% endfor %}
     {% endfor %}
   </div>
 {% endblock content %}

@@ -1,5 +1,6 @@
 from flask import render_template, redirect, url_for, request, session, flash
 from sqlalchemy.exc import DBAPIError, IntegrityError
+from json.decoder import JSONDecodeError
 from .forms import Company_form, Company_add_form, Portfolio_add_form
 from .models import db, Company, Portfolio
 from . import app
@@ -32,15 +33,20 @@ def company_search():
     form = Company_form()
 
     if form.validate_on_submit():
-        symbol = form.data['symbol']
+        try:
+            symbol = form.data['symbol']
 
-        url = '{}/stock/{}/company'.format(os.getenv('API_URL'), symbol)
+            url = '{}/stock/{}/company'.format(os.getenv('API_URL'), symbol)
 
-        res = requests.get(url)
-        data = json.loads(res.text)
+            res = requests.get(url)
+            data = json.loads(res.text)
 
-        session['context'] = data
-        session['symbol'] = symbol
+            session['context'] = data
+            session['symbol'] = symbol
+
+        except JSONDecodeError:
+            flash("That symbol doesn't seem to exist")
+            return render_template('search.html', form=form)
 
         return redirect(url_for('.company_preview'))
 
@@ -100,4 +106,5 @@ def company_detail():
         return redirect(url_for('.company_search'))
 
     companies = Company.query.all()
-    return render_template('portfolio.html', companies=companies, form=form)
+    portfolios = Portfolio.query.all()
+    return render_template('portfolio.html', companies=companies, form=form, portfolios=portfolios)
