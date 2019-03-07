@@ -63,7 +63,8 @@ def company_preview():
         try:
             company = Company(
                 company_name=form_context['company_name'],
-                symbol=form_context['symbol']
+                symbol=form_context['symbol'],
+                portfolio_id=form.data['portfolios']
             )
             db.session.add(company)
             db.session.commit()
@@ -81,7 +82,7 @@ def company_preview():
     )
 
 
-@app.route('/portfolio')
+@app.route('/portfolio', methods=['GET', 'POST'])
 def company_detail():
     """
     GET route for /portfolio that renders portfolio.html.

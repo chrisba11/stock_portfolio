@@ -3,10 +3,18 @@
 {% block content %}
   <div class="container">
     <h2>Saved Companies</h2>
+    <div>
+      <h3>Create a new Portfolio!</h3>
+      <form action="{{ url_for(".company_detail") }}" method="POST">
+        {{ form.hidden_tag() }}
+        {{ form.portfolio_name.label }}{{ form.portfolio_name(size=30) }}
+        <input type="submit" name="create_portfolio" id="create_portfolio" value="Create">
+      </form>
+    </div>
     {% for company in companies %}
       <div class="company">
-        <p>Company: {{ company.company_name }}</p>
-        <p>Symbol: {{ company.symbol }}</p>
+        <h5>{{ Company.portfolio.portfolio_name }}</h5>
+        <p>Company: {{ company.company_name }} ({{ company.symbol.upper() }})</p>
       </div>
     {% endfor %}
   </div>
