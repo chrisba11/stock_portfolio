@@ -2,12 +2,25 @@
 
 {% block content %}
   <div class="container">
-    <h2>Saved Companies</h2>
-    {% for company in companies %}
-      <div class="company">
-        <p>Company: {{ company.company_name }}</p>
-        <p>Symbol: {{ company.symbol }}</p>
-      </div>
+    <h2>My Portfolios</h2>
+    {% for portfolio in portfolios %}
+      <h4>{{ portfolio.portfolio_name }}</h4>
+      {% for company in companies %}
+        {% if company.portfolio.portfolio_name == portfolio.portfolio_name %}
+          <ul class="company">
+            <li>{{ company.company_name }} ({{ company.symbol.upper() }})</li>
+          </ul>
+        {% endif %}
+      {% endfor %}
     {% endfor %}
+    <hr>
+    <div>
+      <h5>Create a new Portfolio!</h5>
+      <form action="{{ url_for(".company_detail") }}" method="POST">
+        {{ form.hidden_tag() }}
+        {{ form.portfolio_name.label }}{{ form.portfolio_name(size=30) }}
+        <input type="submit" name="create_portfolio" id="create_portfolio" value="Create">
+      </form>
+    </div>
   </div>
 {% endblock content %}
