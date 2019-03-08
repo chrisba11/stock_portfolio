@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, request, session, flash
 from sqlalchemy.exc import DBAPIError, IntegrityError
 from json.decoder import JSONDecodeError
-from .forms import Company_form, Company_add_form, Portfolio_add_form
+from .forms import CompanyForm, CompanyAddForm, PortfolioAddForm
 from .models import db, Company, Portfolio
 from . import app
 import json
@@ -30,7 +30,7 @@ def company_search():
     """
     GET & POST routes for /search that requests company details from API.
     """
-    form = Company_form()
+    form = CompanyForm()
 
     if form.validate_on_submit():
         try:
@@ -63,7 +63,7 @@ def company_preview():
         'symbol': session['symbol']
     }
 
-    form = Company_add_form(**form_context)
+    form = CompanyAddForm(**form_context)
 
     if form.validate_on_submit():
         try:
@@ -93,7 +93,7 @@ def company_detail():
     """
     GET route for /portfolio that renders portfolio.html.
     """
-    form = Portfolio_add_form()
+    form = PortfolioAddForm()
 
     if form.validate_on_submit():
         try:

@@ -4,14 +4,14 @@ from wtforms.validators import DataRequired
 from .models import Portfolio
 
 
-class Company_form(FlaskForm):
+class CompanyForm(FlaskForm):
     """
 
     """
     symbol = StringField('symbol', validators=[DataRequired()])
 
 
-class Company_add_form(FlaskForm):
+class CompanyAddForm(FlaskForm):
     """
 
     """
@@ -24,8 +24,16 @@ class Company_add_form(FlaskForm):
         self.portfolios.choices = [(str(p.id), p.portfolio_name) for p in Portfolio.query.all()]
 
 
-class Portfolio_add_form(FlaskForm):
+class PortfolioAddForm(FlaskForm):
     """
 
     """
     portfolio_name = StringField('Portfolio Name', validators=[DataRequired()])
+
+
+class AuthForm(FlaskForm):
+    """
+
+    """
+    email = StringField('Email', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
