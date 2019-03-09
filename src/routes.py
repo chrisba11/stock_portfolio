@@ -1,5 +1,5 @@
 from flask import render_template, redirect, url_for, request, session, flash, g
-from sqlalchemy.exc import DBAPIError, IntegrityError
+from sqlalchemy.exc import DBAPIError, IntegrityError, InvalidRequestError
 from json.decoder import JSONDecodeError
 from .auth import login_required
 from .forms import CompanyForm, CompanyAddForm, PortfolioAddForm
@@ -71,20 +71,31 @@ def company_preview():
     form = CompanyAddForm(**form_context)
 
     if form.validate_on_submit():
-        try:
-            company = Company(
-                company_name=form_context['company_name'],
-                symbol=form_context['symbol'],
-                portfolio_id=form.data['portfolios']
-            )
-            db.session.add(company)
-            db.session.commit()
-        except (DBAPIError, IntegrityError):
-            flash('Oops. Something went wrong with your search.')
+
+        if Company.query.filter_by(symbol=form_context['symbol']).first() is None:
+            try:
+                company = Company(
+                    company_name=form_context['company_name'],
+                    symbol=form_context['symbol'],
+                    portfolio_id=form.data['portfolios']
+                )
+                db.session.add(company)
+                db.session.commit()
+            except (DBAPIError, InvalidRequestError):
+                flash('Oops. That company appears to already exist in the database. Please choose another.')
+
+                return render_template('search.html', form=form)
+
+            except IntegrityError:
+                flash('Something went wrong. SAD!')
+
+                return render_template('search.html', form=form)
+
+            return redirect(url_for('.company_detail'))
+        else:
+            flash('Oops. That company appears to already exist in the database. Please choose another.')
 
             return render_template('search.html', form=form)
-
-        return redirect(url_for('.company_detail'))
 
     return render_template(
         'company.html',
@@ -107,7 +118,7 @@ def company_detail():
             db.session.add(porfolio)
             db.session.commit()
         except (DBAPIError, IntegrityError):
-            flash('Oops. Something went wrong with your portfolio form.')
+            flash('Oops. That portfolio name appears to already exist in the database. Please choose another.')
 
             return render_template('portfolio.html', form=form)
 
