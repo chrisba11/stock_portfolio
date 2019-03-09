@@ -17,4 +17,4 @@ app.config.from_mapping(
 )
 
 
-from . import routes, models, exceptions
+from . import routes, auth, models, exceptions

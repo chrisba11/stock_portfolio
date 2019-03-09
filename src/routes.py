@@ -13,7 +13,7 @@ import requests
 @app.add_template_global
 def get_portfolios():
     """
-
+    This method returns the portfolio names associated with the logged-in user.
     """
     if g.user is not None:
         return Portfolio.query.filter_by(user_id=g.user.id).all()
@@ -32,7 +32,7 @@ def home():
 @app.route('/search', methods=['GET', 'POST'])
 def company_search():
     """
-    GET & POST routes for /search that requests company details from API.
+    GET & POST routes for '/search' that requests company details from API.
     """
     form = CompanyForm()
 
@@ -61,7 +61,8 @@ def company_search():
 @app.route('/preview', methods=['GET', 'POST'])
 def company_preview():
     """
-
+    GET & POST routes for '/preview'. GET shows information returned from API,
+    POST will save the information to the DB.
     """
     form_context = {
         'company_name': session['context']['companyName'],
@@ -108,7 +109,7 @@ def company_preview():
 @app.route('/portfolio', methods=['GET', 'POST'])
 def company_detail():
     """
-    GET route for /portfolio that renders portfolio.html.
+    GET route for '/portfolio' that renders portfolio.html.
     """
     form = PortfolioAddForm()
 
