@@ -13,29 +13,3 @@ To use this application, you will want to clone the repo, open a virtual environ
 This app utilizies the Flask framework, along with requests, flask-sqlalchemy, "psycopg2-binary", flask-migrate, flask-wtf, passlib, and gunicorn. Testing is being performed using pytest.
 
 I am using jinja2 templating for server side rendering of HTML.
-
-## API
-
-
-[[source]]
-url = "https://pypi.org/simple"
-verify_ssl = true
-name = "pypi"
-
-[packages]
-flask = "*"
-requests = "*"
-flask-sqlalchemy = "*"
-"psycopg2-binary" = "*"
-flask-migrate = "*"
-python-dotenv = "*"
-flask-wtf = "*"
-gunicorn = "*"
-passlib = "*"
-
-[dev-packages]
-pytest = "*"
-pep8 = "*"
-
-[requires]
-python_version = "3.7"
