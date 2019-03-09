@@ -21,7 +21,7 @@ class CompanyAddForm(FlaskForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.portfolios.choices = [(str(p.id), p.portfolio_name) for p in Portfolio.query.all()]
+        self.portfolios.choices = [(str(p.id), p.portfolio_name)for p in Portfolio.query.all()]
 
 
 class PortfolioAddForm(FlaskForm):

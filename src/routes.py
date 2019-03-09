@@ -1,6 +1,7 @@
-from flask import render_template, redirect, url_for, request, session, flash
+from flask import render_template, redirect, url_for, request, session, flash, g
 from sqlalchemy.exc import DBAPIError, IntegrityError
 from json.decoder import JSONDecodeError
+from .auth import login_required
 from .forms import CompanyForm, CompanyAddForm, PortfolioAddForm
 from .models import db, Company, Portfolio
 from . import app
@@ -46,6 +47,7 @@ def company_search():
 
         except JSONDecodeError:
             flash("That symbol doesn't seem to exist")
+
             return render_template('search.html', form=form)
 
         return redirect(url_for('.company_preview'))
@@ -76,6 +78,7 @@ def company_preview():
             db.session.commit()
         except (DBAPIError, IntegrityError):
             flash('Oops. Something went wrong with your search.')
+
             return render_template('search.html', form=form)
 
         return redirect(url_for('.company_detail'))
@@ -102,9 +105,13 @@ def company_detail():
             db.session.commit()
         except (DBAPIError, IntegrityError):
             flash('Oops. Something went wrong with your portfolio form.')
+
             return render_template('portfolio.html', form=form)
+
         return redirect(url_for('.company_search'))
 
-    companies = Company.query.all()
-    portfolios = Portfolio.query.all()
+    user_portfolios = Portfolio.query.filter(Portfolio.user_id == g.user.id).all()
+    portfolio_ids = [port.id for port in user_portfolios]
+    user_companies = Company.query.filter(Company.portfolio_id.in_(portfolio_ids)).all()
+
     return render_template('portfolio.html', companies=companies, form=form, portfolios=portfolios)
