@@ -117,4 +117,4 @@ def company_detail():
     portfolio_ids = [port.id for port in user_portfolios]
     user_companies = Company.query.filter(Company.portfolio_id.in_(portfolio_ids)).all()
 
-    return render_template('portfolio.html', companies=companies, form=form, portfolios=portfolios)
+    return render_template('portfolio.html', companies=user_companies, form=form, portfolios=user_portfolios)

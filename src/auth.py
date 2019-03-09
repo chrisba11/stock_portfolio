@@ -41,15 +41,19 @@ def register():
     if form.validate_on_submit():
         email = form.data['email']
         password = form.data['password']
+        print('password = ', password)
         error = None
 
         if not email or not password:
             error = 'Invalid email or password'
+
         if User.query.filter_by(email=email).first() is not None:
-            error = '{} has already been registered'.format(email)
+            flash('{} has already been registered!'.format(email))
+
+            return redirect(url_for('.login'))
 
         if error is None:
-            user = User(email=email, password=password)
+            user = User(email=email, raw_password=password)
             db.session.add(user)
             db.session.commit()
 
@@ -76,7 +80,7 @@ def login():
 
         user = User.query.filter_by(email=email).first()
 
-        if use is None or not User.check_password_hash(user, password):
+        if user is None or not User.check_password_hash(user, password):
             error = 'Invalid username or password.'
 
         if error is None:
