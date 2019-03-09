@@ -32,3 +32,71 @@ def load_logged_in_user():
 
 
 @app.route('/register', methods=['GET', 'POST'])
+def register():
+    """
+
+    """
+    form = AuthForm()
+
+    if form.validate_on_submit():
+        email = form.data['email']
+        password = form.data['password']
+        error = None
+
+        if not email or not password:
+            error = 'Invalid email or password'
+        if User.query.filter_by(email=email).first() is not None:
+            error = '{} has already been registered'.format(email)
+
+        if error is None:
+            user = User(email=email, password=password)
+            db.session.add(user)
+            db.session.commit()
+
+            flash('Registration complete. Please log in.')
+
+            return redirect(url_for('.login'))
+
+        flash(error)
+
+    return render_template('auth/register.html', form=form)
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    """
+
+    """
+    form = AuthForm()
+
+    if form.validate_on_submit():
+        email = form.data['email']
+        password = form.data['password']
+        error = None
+
+        user = User.query.filter_by(email=email).first()
+
+        if use is None or not User.check_password_hash(user, password):
+            error = 'Invalid username or password.'
+
+        if error is None:
+            session.clear()
+            session['user_id'] = user.id
+
+            return redirect(url_for('.company_detail'))
+
+        flash(error)
+
+    return render_template('auth/login.html', form=form)
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    """
+
+    """
+    session.clear()
+    flash('See you again soon!')
+
+    return redirect(url_for('.login'))
