@@ -15,7 +15,10 @@ def get_portfolios():
     """
 
     """
-    return Portfolio.query.all()
+    if g.user is not None:
+        return Portfolio.query.filter_by(user_id=g.user.id).all()
+
+    return 'get_portfolios DIDNT WORK!'
 
 
 @app.route('/')
@@ -100,7 +103,7 @@ def company_detail():
 
     if form.validate_on_submit():
         try:
-            porfolio = Portfolio(portfolio_name=form.data['portfolio_name'])
+            porfolio = Portfolio(portfolio_name=form.data['portfolio_name'], user_id=g.user.id)
             db.session.add(porfolio)
             db.session.commit()
         except (DBAPIError, IntegrityError):
