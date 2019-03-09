@@ -1,17 +1,27 @@
 {% extends 'base.html' %}
 
+{% block title %}
+  <title>Company Deets</title>
+{% endblock title %}
+
 {% block content %}
-  <h2>Company Details</h2>
+  <div class="container">
 
-  <p>Company: {{ company_name }} ({{ symbol.upper() }})</p>
+    <h2>Company Details</h2>
 
-  <form action="{{ url_for(".company_preview") }}" method="POST">
-    {{ form.hidden_tag() }}
-    <div class="hidden" hidden>
-      {{ form.symbol.label }}{{ form.symbol(size=20) }}
-      {{ form.company_name.label }}{{ form.company_name(size=30) }}
-    </div>
-    {{ form.portfolios.label }}{{ form.portfolios() }}
-    <input type="submit" value="Save">
-  </form>
+    <p>Company: {{ company_name }} ({{ symbol.upper() }})</p>
+
+    <form action="{{ url_for(".company_preview") }}" method="POST">
+      {{ form.hidden_tag() }}
+      <div class="hidden" hidden>
+        {{ form.symbol.label }}{{ form.symbol(size=20) }}
+        {{ form.company_name.label }}{{ form.company_name(size=30) }}
+      </div>
+      {{ form.portfolios.label }}{{ form.portfolios() }}
+      <input type="submit" value="Save">
+    </form>
+  </div>
 {% endblock content %}
+
+
+
