@@ -1,6 +1,6 @@
-from src.models import db as _db
-from src.models import Company, Portfolio, User
-from src import app as _app
+from models import db as _db
+from models import Company, Portfolio, User
+from . import app as _app
 import pytest
 import os
 
