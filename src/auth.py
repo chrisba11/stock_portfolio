@@ -7,7 +7,7 @@ from .models import db, User
 
 def login_required(view):
     """
-
+    Function to wrap a view or something like that. No idea what it means.
     """
     @functools.wraps(view)
     def wrapped_view(**kwargs):
@@ -22,7 +22,7 @@ def login_required(view):
 @app.before_request
 def load_logged_in_user():
     """
-
+    Function to load the information for the logged in user, if one is logged in.
     """
     user_id = session.get('user_id')
     if user_id is None:
@@ -34,7 +34,8 @@ def load_logged_in_user():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     """
-
+    GET & POST routes for the '/register' path. GET will render the register page,
+    POST will register the user and save them to the DB and then render '/login' page.
     """
     form = AuthForm()
 
@@ -69,7 +70,8 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """
-
+    GET & POST routes for the '/login' page. GET will render the page so the user can log in,
+    POST will log the user in, if they provide valid input, and render their portfolio page.
     """
     form = AuthForm()
 
@@ -98,7 +100,7 @@ def login():
 @login_required
 def logout():
     """
-
+    GET route to the '/logout' page to log the user out of the application.
     """
     session.clear()
     flash('See you again soon!')
