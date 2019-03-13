@@ -66,7 +66,7 @@ def db_session(db, request):
 
 
 @pytest.fixture()
-def client(app, db, session):
+def client(app, db, db_session):
     """
 
     """
@@ -80,14 +80,14 @@ def client(app, db, session):
 
 
 @pytest.fixture()
-def user(session):
+def user(db_session):
     """
 
     """
     user = User(email='test@testing.com', password='secret')
 
-    session.add(user)
-    session.commit()
+    db_session.add(user)
+    db_session.commit()
 
     return user
 
@@ -106,26 +106,26 @@ def authenticated_client(client, user):
 
 
 @pytest.fixture()
-def portfilio(session, user):
+def portfilio(db_session, user):
     """
 
     """
     portfolio = Portfolio(portfolio_name='Default', user_id=user.id)
 
-    session.add(portfilio)
-    session.commit()
+    db_session.add(portfilio)
+    db_session.commit()
 
     return portfilio
 
 
 @pytest.fixture()
-def company(session, portfilio):
+def company(db_session, portfilio):
     """
 
     """
     company = Company(company_name='Fake Company', symbol='FAKE', portfolio_id=portfilio.id)
 
-    session.add(company)
-    session.commit()
+    db_session.add(company)
+    db_session.commit()
 
     return company
