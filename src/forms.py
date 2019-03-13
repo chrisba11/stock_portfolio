@@ -7,14 +7,14 @@ from .models import Portfolio
 
 class CompanyForm(FlaskForm):
     """
-
+    Class to create a form with a field for a company symbol.
     """
     symbol = StringField('symbol', validators=[DataRequired()])
 
 
 class CompanyAddForm(FlaskForm):
     """
-
+    Class to create a form for adding a company to the database.
     """
     symbol = StringField('symbol', validators=[DataRequired()])
     company_name = StringField('company name', validators=[DataRequired()])
@@ -27,14 +27,14 @@ class CompanyAddForm(FlaskForm):
 
 class PortfolioAddForm(FlaskForm):
     """
-
+    Class to create a new portfolio name.
     """
     portfolio_name = StringField('Portfolio Name', validators=[DataRequired()])
 
 
 class AuthForm(FlaskForm):
     """
-
+    Class to create a form for user registration and login.
     """
     email = StringField('Email', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])

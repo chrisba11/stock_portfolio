@@ -11,7 +11,7 @@ migrate = Migrate(app, db)
 
 class Company(db.Model):
     """
-
+    Creates a companies table.
     """
     __tablename__ = 'companies'
 
@@ -27,7 +27,7 @@ class Company(db.Model):
 
 class Portfolio(db.Model):
     """
-
+    Creates a portfolios table.
     """
     __tablename__ = 'portfolios'
 
@@ -43,7 +43,7 @@ class Portfolio(db.Model):
 
 class User(db.Model):
     """
-
+    Creates a users table.
     """
     __tablename__ = 'users'
 
