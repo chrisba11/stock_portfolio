@@ -1,5 +1,5 @@
-from ..models import db as _db
 from ..models import Company, Portfolio, User
+from ..models import db as _db
 from .. import app as _app
 import pytest
 import os
@@ -106,24 +106,24 @@ def authenticated_client(client, user):
 
 
 @pytest.fixture()
-def portfilio(db_session, user):
+def portfolio(db_session, user):
     """
 
     """
     portfolio = Portfolio(portfolio_name='Default', user_id=user.id)
 
-    db_session.add(portfilio)
+    db_session.add(portfolio)
     db_session.commit()
 
-    return portfilio
+    return portfolio
 
 
 @pytest.fixture()
-def company(db_session, portfilio):
+def company(db_session, portfolio):
     """
 
     """
-    company = Company(company_name='Fake Company', symbol='FAKE', portfolio_id=portfilio.id)
+    company = Company(company_name='Fake Company', symbol='FAKE', portfolio_id=portfolio.id)
 
     db_session.add(company)
     db_session.commit()
