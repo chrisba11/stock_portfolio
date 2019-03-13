@@ -1,6 +1,6 @@
-from models import db as _db
-from models import Company, Portfolio, User
-from . import app as _app
+from ..models import db as _db
+from ..models import Company, Portfolio, User
+from .. import app as _app
 import pytest
 import os
 
@@ -19,7 +19,7 @@ def app(request):
     )
 
     ctx = _app.app_context()
-    stx.push()
+    ctx.push()
 
     def teardown():
         ctx.pop()
