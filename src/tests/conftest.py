@@ -110,7 +110,7 @@ def portfolio(db_session, user):
     """
 
     """
-    portfolio = Portfolio(portfolio_name='Default', user_id=user.id)
+    portfolio = Portfolio(portfolio_name='Potato', user_id=user.id)
 
     db_session.add(portfolio)
     db_session.commit()
