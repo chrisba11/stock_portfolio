@@ -84,7 +84,7 @@ def user(db_session):
     """
 
     """
-    user = User(email='test@testing.com', password='secret')
+    user = User(email='test@testing.com', raw_password='secret')
 
     db_session.add(user)
     db_session.commit()
