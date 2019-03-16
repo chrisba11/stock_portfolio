@@ -84,7 +84,7 @@ def user(db_session):
     """
 
     """
-    user = User(email='test@testing.com', password='secret')
+    user = User(email='test@testing.com', raw_password='secret')
 
     db_session.add(user)
     db_session.commit()
@@ -110,7 +110,7 @@ def portfolio(db_session, user):
     """
 
     """
-    portfolio = Portfolio(portfolio_name='Default', user_id=user.id)
+    portfolio = Portfolio(portfolio_name='Potato', user_id=user.id)
 
     db_session.add(portfolio)
     db_session.commit()

@@ -42,7 +42,6 @@ def register():
     if form.validate_on_submit():
         email = form.data['email']
         password = form.data['password']
-        print('password = ', password)
         error = None
 
         if not email or not password:
