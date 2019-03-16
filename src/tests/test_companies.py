@@ -35,5 +35,3 @@ class TestCompanyModel:
 
         """
         assert company.portfolio.portfolio_name == 'Potato'
-
-    
